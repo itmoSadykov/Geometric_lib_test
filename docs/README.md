@@ -142,3 +142,14 @@ perimeter(3, 4, 5)
 `4358d00` - Добавлена документация для файла square.py <br/>
 `f37bc23` - Добавлена документация для файла rectangle.py <br/>
 `e10cf7c` - Добавлена документация для файла circle.py <br/>
+
+
+##### 🚀 Использование тестов
+
+```python
+from circle import area, perimeter
+
+circle_area = area(5)
+circle_circumference = perimeter(5)
+print(f"Площадь круга: {circle_area}")
+print(f"Длина окружности: {circle_circumference}")
