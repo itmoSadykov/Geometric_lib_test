@@ -11,7 +11,7 @@ def area(a, h):
     '''
     return a * h / 2
 
-def perimeter(a, b):
+def perimeter(a, b, c):
     '''
     Возвращает периметр треугольника
     
@@ -23,4 +23,4 @@ def perimeter(a, b):
             Возвращаемое значение:
                     perimeter (float): периметр треугольника a,b,c
     '''
-    return (a + b) * 2
+    return a + b + c

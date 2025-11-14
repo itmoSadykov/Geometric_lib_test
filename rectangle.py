@@ -22,5 +22,5 @@ def perimeter(a,b):
             Возвращаемое значение:
                     perimeter (float): периметр прямоугольника co сторонами a и b
     '''
-    return a + b
+    return 2 * (a + b)
 
