@@ -1,0 +1,83 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  
+
+jobs:
+  test-ubuntu:
+    name: Unit Tests on Ubuntu
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Display environment information
+      run: |
+        echo "=== Environment Information ==="
+        echo "Operating System: ${{ runner.os }}"
+        python --version
+        echo "Current directory: $(pwd)"
+        echo "Files in root:"
+        ls -la *.py
+        echo "Test files:"
+        ls -la test_*.py
+        
+    - name: Run all unit tests
+      run: |
+        echo "=== Running Unit Tests on Ubuntu ==="
+        python -m unittest discover . -p "test_*.py" -v
+        
+    - name: Test completion status
+      if: always()
+      run: |
+        echo "=== Test Summary ==="
+        echo "Platform: Ubuntu"
+        echo "Status: ${{ job.status }}"
+        echo "Time: $(date)"
+        
+  test-windows:
+    name: Unit Tests on Windows
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Display environment information
+      run: |
+        Write-Host "=== Environment Information ==="
+        Write-Host "Operating System: ${{ runner.os }}"
+        python --version
+        Write-Host "Current directory: $(Get-Location)"
+        Write-Host "Files in root:"
+        dir *.py
+        Write-Host "Test files:"
+        dir test_*.py
+        
+    - name: Run all unit tests
+      run: |
+        Write-Host "=== Running Unit Tests on Windows ==="
+        python -m unittest discover . -p "test_*.py" -v
+        
+    - name: Test completion status
+      if: always()
+      run: |
+        Write-Host "=== Test Summary ==="
+        Write-Host "Platform: Windows"
+        Write-Host "Status: ${{ job.status }}"
+        Write-Host "Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
