@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Geometric Library Tests
+name: CI/CD 
 
 on:
   push:
