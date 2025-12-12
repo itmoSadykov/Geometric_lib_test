@@ -1,83 +1,103 @@
-name: CI/CD
+name: CI/CD 
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:  
+  workflow_dispatch:
+
+env:
+  WORKFLOW_RUN_NUMBER: ${{ github.run_number }}
+  RUN_ID: ${{ github.run_id }}
 
 jobs:
   test-ubuntu:
-    name: Unit Tests on Ubuntu
+    name: "🔵 #${{ github.run_number }} - Tests on Ubuntu"
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository code
+    - name: "📦 Checkout code (Run #${{ github.run_number }})"
       uses: actions/checkout@v4
       
-    - name: Set up Python 3.10
+    - name: "🐍 Set up Python"
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
         
-    - name: Display environment information
+    - name: "📊 Test Information"
       run: |
-        echo "=== Environment Information ==="
-        echo "Operating System: ${{ runner.os }}"
-        python --version
-        echo "Current directory: $(pwd)"
-        echo "Files in root:"
-        ls -la *.py
-        echo "Test files:"
-        ls -la test_*.py
+        echo "================================================"
+        echo "          TEST EXECUTION REPORT"
+        echo "================================================"
+        echo "Run Number:    #${{ github.run_number }}"
+        echo "Run ID:        ${{ github.run_id }}"
+        echo "Platform:      Ubuntu"
+        echo "Trigger:       ${{ github.event_name }}"
+        echo "Branch:        ${{ github.ref_name }}"
+        echo "Commit:        ${{ github.sha }}"
+        echo "Date:          $(date '+%Y-%m-%d %H:%M:%S %Z')"
+        echo "================================================"
         
-    - name: Run all unit tests
+    - name: "🧪 Run Unit Tests"
       run: |
-        echo "=== Running Unit Tests on Ubuntu ==="
+        echo "Starting test execution #${{ github.run_number }} on Ubuntu..."
         python -m unittest discover . -p "test_*.py" -v
         
-    - name: Test completion status
+    - name: "📈 Generate Test Report"
       if: always()
       run: |
-        echo "=== Test Summary ==="
-        echo "Platform: Ubuntu"
-        echo "Status: ${{ job.status }}"
-        echo "Time: $(date)"
+        echo "================================================"
+        echo "         TEST EXECUTION SUMMARY"
+        echo "================================================"
+        echo "Run:           #${{ github.run_number }}"
+        echo "Status:        ${{ job.status }}"
+        echo "Platform:      Ubuntu"
+        echo "Duration:      ${{ job.status == 'success' && 'PASSED' || 'FAILED' }}"
+        echo "Completed at:  $(date '+%Y-%m-%d %H:%M:%S %Z')"
+        echo "================================================"
         
   test-windows:
-    name: Unit Tests on Windows
+    name: "🟣 #${{ github.run_number }} - Tests on Windows"
     runs-on: windows-latest
     
     steps:
-    - name: Checkout repository code
+    - name: "📦 Checkout code (Run #${{ github.run_number }})"
       uses: actions/checkout@v4
       
-    - name: Set up Python 3.10
+    - name: "🐍 Set up Python"
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
         
-    - name: Display environment information
+    - name: "📊 Test Information"
       run: |
-        Write-Host "=== Environment Information ==="
-        Write-Host "Operating System: ${{ runner.os }}"
-        python --version
-        Write-Host "Current directory: $(Get-Location)"
-        Write-Host "Files in root:"
-        dir *.py
-        Write-Host "Test files:"
-        dir test_*.py
+        Write-Host "================================================"
+        Write-Host "          TEST EXECUTION REPORT"
+        Write-Host "================================================"
+        Write-Host "Run Number:    #${{ github.run_number }}"
+        Write-Host "Run ID:        ${{ github.run_id }}"
+        Write-Host "Platform:      Windows"
+        Write-Host "Trigger:       ${{ github.event_name }}"
+        Write-Host "Branch:        ${{ github.ref_name }}"
+        Write-Host "Commit:        ${{ github.sha }}"
+        Write-Host "Date:          $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        Write-Host "================================================"
         
-    - name: Run all unit tests
+    - name: "🧪 Run Unit Tests"
       run: |
-        Write-Host "=== Running Unit Tests on Windows ==="
+        Write-Host "Starting test execution #${{ github.run_number }} on Windows..."
         python -m unittest discover . -p "test_*.py" -v
         
-    - name: Test completion status
+    - name: "📈 Generate Test Report"
       if: always()
       run: |
-        Write-Host "=== Test Summary ==="
-        Write-Host "Platform: Windows"
-        Write-Host "Status: ${{ job.status }}"
-        Write-Host "Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        Write-Host "================================================"
+        Write-Host "         TEST EXECUTION SUMMARY"
+        Write-Host "================================================"
+        Write-Host "Run:           #${{ github.run_number }}"
+        Write-Host "Status:        ${{ job.status }}"
+        Write-Host "Platform:      Windows"
+        Write-Host "Duration:      ${{ job.status == 'success' && 'PASSED' || 'FAILED' }}"
+        Write-Host "Completed at:  $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        Write-Host "================================================"
