@@ -1,103 +1,52 @@
-name: CI/CD 
+name: CI/CD Pipeline - Geometric Library Tests
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:
-
-env:
-  WORKFLOW_RUN_NUMBER: ${{ github.run_number }}
-  RUN_ID: ${{ github.run_id }}
 
 jobs:
   test-ubuntu:
-    name: "🔵 #${{ github.run_number }} - Tests on Ubuntu"
+    name: "Tests on Ubuntu"
     runs-on: ubuntu-latest
     
     steps:
-    - name: "📦 Checkout code (Run #${{ github.run_number }})"
+    - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: "🐍 Set up Python"
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
         
-    - name: "📊 Test Information"
+    - name: Run unit tests
       run: |
-        echo "================================================"
-        echo "          TEST EXECUTION REPORT"
-        echo "================================================"
-        echo "Run Number:    #${{ github.run_number }}"
-        echo "Run ID:        ${{ github.run_id }}"
-        echo "Platform:      Ubuntu"
-        echo "Trigger:       ${{ github.event_name }}"
-        echo "Branch:        ${{ github.ref_name }}"
-        echo "Commit:        ${{ github.sha }}"
-        echo "Date:          $(date '+%Y-%m-%d %H:%M:%S %Z')"
-        echo "================================================"
-        
-    - name: "🧪 Run Unit Tests"
-      run: |
-        echo "Starting test execution #${{ github.run_number }} on Ubuntu..."
         python -m unittest discover . -p "test_*.py" -v
-        
-    - name: "📈 Generate Test Report"
-      if: always()
-      run: |
-        echo "================================================"
-        echo "         TEST EXECUTION SUMMARY"
-        echo "================================================"
-        echo "Run:           #${{ github.run_number }}"
-        echo "Status:        ${{ job.status }}"
-        echo "Platform:      Ubuntu"
-        echo "Duration:      ${{ job.status == 'success' && 'PASSED' || 'FAILED' }}"
-        echo "Completed at:  $(date '+%Y-%m-%d %H:%M:%S %Z')"
-        echo "================================================"
         
   test-windows:
-    name: "🟣 #${{ github.run_number }} - Tests on Windows"
+    name: "Tests on Windows"
     runs-on: windows-latest
     
+    env:
+      PYTHONUTF8: 1  
+      PYTHONIOENCODING: utf-8  
+    
     steps:
-    - name: "📦 Checkout code (Run #${{ github.run_number }})"
+    - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: "🐍 Set up Python"
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
         
-    - name: "📊 Test Information"
+    - name: Configure Windows console
       run: |
-        Write-Host "================================================"
-        Write-Host "          TEST EXECUTION REPORT"
-        Write-Host "================================================"
-        Write-Host "Run Number:    #${{ github.run_number }}"
-        Write-Host "Run ID:        ${{ github.run_id }}"
-        Write-Host "Platform:      Windows"
-        Write-Host "Trigger:       ${{ github.event_name }}"
-        Write-Host "Branch:        ${{ github.ref_name }}"
-        Write-Host "Commit:        ${{ github.sha }}"
-        Write-Host "Date:          $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-        Write-Host "================================================"
+        # Устанавливаем UTF-8 для PowerShell
+        [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+        chcp 65001
         
-    - name: "🧪 Run Unit Tests"
+    - name: Run unit tests
       run: |
-        Write-Host "Starting test execution #${{ github.run_number }} on Windows..."
         python -m unittest discover . -p "test_*.py" -v
-        
-    - name: "📈 Generate Test Report"
-      if: always()
-      run: |
-        Write-Host "================================================"
-        Write-Host "         TEST EXECUTION SUMMARY"
-        Write-Host "================================================"
-        Write-Host "Run:           #${{ github.run_number }}"
-        Write-Host "Status:        ${{ job.status }}"
-        Write-Host "Platform:      Windows"
-        Write-Host "Duration:      ${{ job.status == 'success' && 'PASSED' || 'FAILED' }}"
-        Write-Host "Completed at:  $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-        Write-Host "================================================"
